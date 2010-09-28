@@ -8,7 +8,6 @@ BSD:
 
 Debian:
     $ sudo aptitude install python-pygments
-
 <br />
     $ sudo gem install bluecloth albino liquid
     $ ruby generate.rb > slides.html
