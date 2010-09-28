@@ -6,26 +6,47 @@
   <meta name="author" content="Kriss Kowalik, Joshua Hull" />
   <style type="text/css">
     body { font-family: "Bitstream Vera Sans", Helvetica; font-size: 170%; padding-top: 40px; margin-bottom: 200px; }
-    #main { width: 900px; margin: 0 auto; }
+    #main { width: 960px; margin: 0 auto; }
     pre { margin-left: 45px; "Bitstream Vera Sans Mono", font-size: 200%; }
     li pre { margin-left: 30px; }
     h1,h2,h3,h4,h5,h6 { text-align: center; margin-bottom: 55px; }
-    hr { border: 0; background: 0; margin-top: 800px; display: block; padding-bottom: 50px; }
+    hr { border: 0; background: 0; margin-top: 800px; display: block; padding-bottom: 50px; page-break-after: always;}
     a { color: #009900; }
   </style>
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
   <script type="text/javascript">
+    var currentSlideNo = 0;
+
+    function slideId(slideNo){
+      return 'slide-' + slideNo;
+    }
+
+    function goToSlide(slideNo){
+      var targetOffset =  $('#' + slideId(slideNo)).offset().top;
+      $('html,body').animate({scrollTop: targetOffset}, 1000);
+      document.location.hash = slideId(slideNo);
+    }
+
     $(document).ready(function() {
-      var current = $('hr:first');
       $(window).keypress(function(key) {
-        var targetOffset = current.offset().top;
-        $('html,body').animate({scrollTop: targetOffset}, 1000);
-        current = current.nextAll('hr').first();
+        currentSlideNo = Number(document.location.hash.split('-')[1]) || 0;
+	      var nextSlide = document.getElementById(slideId(currentSlideNo + 1));
+        var prevSlide = document.getElementById(slideId(currentSlideNo - 1));
+        if((key.which == '32' || key.which == '13') && nextSlide){
+          goToSlide(currentSlideNo + 1);
+          currentSlideNo += 1;
+          return false;
+        } else if(key.which == '8' && prevSlide) {
+          goToSlide(currentSlideNo - 1);
+          currentSlideNo -= 1;
+          return false;
+        }
+          return true;
       })
     })
   </script>
 </head>
-<body>
+<body id="slide-0">
   <div id="main">
     {{ content }}
   </div>
